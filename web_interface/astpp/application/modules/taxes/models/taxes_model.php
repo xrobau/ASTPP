@@ -50,6 +50,10 @@ class Taxes_model extends CI_Model {
 		} else {
 			$data ['reseller_id'] = 0;
 		}
+		// Don't try to insert an empty string into an int, it needs to be a NULL
+		if (empty($data['id'])) {
+			$data['id'] = null;
+		}
 		$this->db->insert ( "taxes", $data );
 	}
 	function edit_tax($data, $id) {
