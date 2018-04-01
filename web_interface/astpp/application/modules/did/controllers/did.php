@@ -176,8 +176,8 @@ class DID extends MX_Controller {
 			$update_array = array (
 					'parent_id' => 0,
 					'accountid' => 0,
-					'assign_date' => '0000-00-00 00:00:00',
-					"charge_upto" => "0000-00-00 00:00:00",
+					'assign_date' => '1980-01-01 00:00:00',
+					"charge_upto" => "1980-01-01 00:00:00",
 					"last_modified_date" => gmdate ( "Y-m-d H:i:s" ),
 					'call_type' => '-1',
 					'extensions' => '' 
@@ -204,8 +204,8 @@ class DID extends MX_Controller {
 			$update_array = array (
 					'parent_id' => $accountinfo ['id'],
 					'accountid' => 0,
-					'assign_date' => '0000-00-00 00:00:00',
-					"charge_upto" => "0000-00-00 00:00:00",
+					'assign_date' => '1980-01-01 00:00:00',
+					"charge_upto" => "1980-01-01 00:00:00",
 					"last_modified_date" => gmdate ( "Y-m-d H:i:s" ),
 					'call_type' => '-1',
 					'extensions' => '' 
@@ -214,8 +214,8 @@ class DID extends MX_Controller {
 			$update_array = array (
 					'parent_id' => 0,
 					'accountid' => 0,
-					'assign_date' => '0000-00-00 00:00:00',
-					"charge_upto" => "0000-00-00 00:00:00",
+					'assign_date' => '1980-01-01 00:00:00',
+					"charge_upto" => "1980-01-01 00:00:00",
 					"last_modified_date" => gmdate ( "Y-m-d H:i:s" ),
 					'call_type' => '-1',
 					'extensions' => '' 
@@ -559,8 +559,8 @@ class DID extends MX_Controller {
 			$did_array = array (
 					"accountid" => 0,
 					"parent_id" => $accountinfo ['reseller_id'],
-					"assign_date" => "0000-00-00 00:00:00",
-					"charge_upto" => "0000-00-00 00:00:00" 
+					"assign_date" => "1980-01-01 00:00:00",
+					"charge_upto" => "1980-01-01 00:00:00" 
 			);
 			$this->db->where ( 'number', $did_number );
 			$this->db->update ( 'dids', $did_array );
