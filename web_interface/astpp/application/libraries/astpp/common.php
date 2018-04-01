@@ -1383,7 +1383,8 @@ class common {
 				'accountid' => $account_id,
 				'status' => '1',
 				'attachment' => $attachment,
-				'reseller_id' => $reseller_id 
+				'reseller_id' => $reseller_id,
+				'template' => ''
 		);
 		
 		$this->CI->db->insert ( 'mail_details', $send_mail_details );
