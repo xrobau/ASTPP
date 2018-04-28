@@ -1,5 +1,9 @@
 {
-    "require": {
-        "filp/whoops": "^2.1"
-    }
+	"require": {
+		"slim/slim": "^3.0",
+		"filp/whoops": "^2.1"
+	},
+	"autoload": {
+		"classmap": [ "api/libraries", "api/abstraction" ]
+	}
 }
