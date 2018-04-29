@@ -31,7 +31,7 @@ $api->add(new \API\ApiAuth);
  * @returns json
  */
 $api->get("/v1/customers", function($req, $resp) {
-	$cust = new ASTPP\Customers;
+	$cust = new ASTPP\Customer;
 	return $resp->withJson($cust->getAll());
 });
 
@@ -43,6 +43,51 @@ $api->get("/v1/customers", function($req, $resp) {
 $api->get("/v1/dids", function($req, $resp) {
 	$dids = new ASTPP\Dids;
 	return $resp->withJson($dids->getAll());
+});
+
+
+/**
+ * Get all SIP Devices
+ * 
+ * @param all (bool) If set, returns all devices, not just active ones
+ *
+ * @returns json
+ */
+$api->get("/v1/sipdevices", function($req, $resp) {
+	$sip = new ASTPP\Sipdevices;
+
+	// An unset param defaults to false
+	$all = $req->getQueryParam('all');
+
+	return $resp->withJson($sip->getAll($all));
+});
+
+/*********************
+ *  Customer Section *
+ *********************/
+
+/*
+ * Get all SIP Devices for a customer
+ * 
+ * @param all (bool) If set, returns all devices, not just active ones
+ *
+ * @returns json
+ */
+$api->get("/v1/customer/devices", function($req, $resp) {
+	$custid = $req->getQueryParam('customer');
+	$cust = new ASTPP\Customer;
+
+	// This will throw an exception if the customer doesn't exist or fails
+	// validation somehow, we don't use the result.
+	$details = $cust->getById($custid);
+
+	// An unset param defaults to false
+	$showall = $req->getQueryParam('all');
+
+	// Get this customers sip devices
+	$sip = new ASTPP\Sipdevices;
+
+	return $resp->withJson($sip->getAllByCustomer($custid, $showall));
 });
 
 $api->run();
