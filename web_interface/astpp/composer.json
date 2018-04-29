@@ -1,6 +1,7 @@
 {
 	"require": {
 		"slim/slim": "^3.0",
+		"stephenhill/base58": "~1.0",
 		"filp/whoops": "^2.1"
 	},
 	"autoload": {

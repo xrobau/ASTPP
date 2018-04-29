@@ -84,11 +84,26 @@ $api->get("/v1/customer/devices", function($req, $resp) {
 	// An unset param defaults to false
 	$showall = $req->getQueryParam('all');
 
-	// Get this customers sip devices
+	// Now just return this customer's sip devices
 	$sip = new ASTPP\Sipdevices;
-
 	return $resp->withJson($sip->getAllByCustomer($custid, $showall));
 });
+
+$api->get("/v1/customer/createdevice", function($req, $resp) {
+	$custid = $req->getQueryParam('customer');
+	$cust = new ASTPP\Customer;
+
+	// This will throw an exception if the customer doesn't exist or fails
+	// validation somehow, we don't use the result.
+	$details = $cust->getById($custid);
+
+	$sip = new ASTPP\Sipdevices;
+
+	$result = $sip->createSipDevice($custid);
+	return $resp->withJson($result);
+
+});
+
 
 $api->run();
 
