@@ -47,11 +47,14 @@ end
 function remap_dest_number(orig_dest_number)
 	local query = "SELECT * FROM dialed_remap";
     	assert (dbh:query(query, function(u)
-		mappings = u;
+		Logger.debug("[REMAP] Checking prefix:"..u['prefix']..", remap: "..u['remap'])
+		if (string.sub(orig_dest_number, 1, string.len(u['prefix'])) == u['prefix']) then
+			s = string.gsub(orig_dest_number, u['prefix'], u['remap'], 1)
+			Logger.debug("[REMAP] Matched. New Number "..s)
+			orig_dest_number = s
+			return s
+		end
 	end))
-    	for prefix,remap in mappings do
-		Logger.debug("[REMAP] prefix:"..prefix..", remap: "..remap)
-	end
 	return orig_dest_number;
 end
 
