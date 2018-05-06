@@ -21,13 +21,13 @@
 --------------------------------------------------------------------------------------
 
 -- Define script path 
-local script_path = "/usr/local/freeswitch/scripts/astpp/";
+local script_path = "/etc/freeswitch/scripts/";
 
 -- Load config file
 dofile("/var/lib/astpp/astpp.lua");
 
 -- Load CONSTANT file
-dofile("/usr/local/freeswitch/scripts/astpp/constant.lua");
+dofile(script_path.."constant.lua");
 
 -- Load json file to decode json string
 JSON = (loadfile (script_path .."lib/JSON.lua"))();
