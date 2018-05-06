@@ -161,7 +161,7 @@ class Rates extends MX_Controller {
 				$csv_data ['includedseconds'] = isset ( $csv_data ['includedseconds'] ) ? $csv_data ['includedseconds'] : 0;
 				$csv_data ['cost'] = ! empty ( $csv_data ['cost'] ) && is_numeric ( $csv_data ['cost'] ) ? $this->common_model->add_calculate_currency ( $csv_data ['cost'], '', '', false, false ) : 0;
 				$csv_data ['inc'] = isset ( $csv_data ['inc'] ) ? $csv_data ['inc'] : 0;
-				$csv_data ['precedence'] = isset ( $csv_data ['precedence'] ) ? $csv_data ['precedence'] : '';
+				$csv_data ['precedence'] = isset ( $csv_data ['precedence'] ) ? $csv_data ['precedence'] : '1';
 				$csv_data ['strip'] = isset ( $csv_data ['strip'] ) ? $csv_data ['strip'] : '';
 				$str = $this->data_validate ( $csv_data );
 				if ($str != "") {
@@ -306,7 +306,7 @@ class Rates extends MX_Controller {
 				$csv_data ['includedseconds'] = isset ( $csv_data ['includedseconds'] ) ? $csv_data ['includedseconds'] : 0;
 				$csv_data ['cost'] = ! empty ( $csv_data ['cost'] ) && is_numeric ( $csv_data ['cost'] ) ? $this->common_model->add_calculate_currency ( $csv_data ['cost'], '', '', false, false ) : 0;
 				$csv_data ['inc'] = isset ( $csv_data ['inc'] ) ? $csv_data ['inc'] : 0;
-				$csv_data ['precedence'] = isset ( $csv_data ['precedence'] ) ? $csv_data ['precedence'] : '';
+				$csv_data ['precedence'] = isset ( $csv_data ['precedence'] ) ? $csv_data ['precedence'] : '1';
 				$csv_data ['last_modified_date'] = gmdate ( "Y-m-d H:i:s" );
 				$str = $this->data_validate ( $csv_data );
 				if ($str != "") {
