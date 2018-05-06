@@ -27,8 +27,8 @@ if (orig_destination_number == nil) then
 end
 
 Logger.info("[Dialplan] Original Dialed number : "..orig_destination_number)
-
 destination_number = remap_dest_number(orig_destination_number)
+Logger.info("[Dialplan] Remapped  Dialed number : "..destination_number)
 
 --Check if dialed number is calling card access number
 if (config['cc_access_numbers'] ~= '') then 

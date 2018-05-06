@@ -41,7 +41,17 @@ end
 -- Important note: This does NOT scale well for a high volume system. It would
 -- be unwise to have more than 20 or 30 entries here, as it's CPU and Database
 -- intensive (Make sure you have Query Caching turned on!)
+--
+-- create table dialed_remap ( prefix char(10) not null, remap char(10) default '' );
+--
 function remap_dest_number(orig_dest_number)
+	local query = "SELECT * FROM dialed_remap";
+    	assert (dbh:query(query, function(u)
+		mappings = u;
+	end))
+    	for prefix,remap in mappings do
+		Logger.debug("[REMAP] prefix:"..prefix..", remap: "..remap)
+	end
 	return orig_dest_number;
 end
 
