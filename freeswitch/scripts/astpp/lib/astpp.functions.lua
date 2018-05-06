@@ -33,6 +33,19 @@ function load_conf()
     return config;
 end
 
+-- Remap destination numbers
+-- This avoids the need to duplicate data in rate groups. This is used
+-- in Australia, for example, where calls can be sent as '617xxxxxxxx' or
+-- '07xxxxxxxx', but all the billing is based around 617xxxxxxxx.
+--
+-- Important note: This does NOT scale well for a high volume system. It would
+-- be unwise to have more than 20 or 30 entries here, as it's CPU and Database
+-- intensive (Make sure you have Query Caching turned on!)
+function remap_dest_number(orig_dest_number)
+	return orig_dest_number;
+end
+
+
 -- Get Speed dial number value
 function get_speeddial_number(destination_number,accountid)  
 	local query = "SELECT A.number FROM "..TBL_SPEED_DIAL.." as A,"..TBL_USERS.." as B WHERE B.status=0 AND B.deleted=0 AND B.id=A.accountid AND A.speed_num =\"" ..destination_number .."\" AND A.accountid = '"..accountid.."' limit 1";
