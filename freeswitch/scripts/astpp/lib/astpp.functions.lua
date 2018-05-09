@@ -175,7 +175,6 @@ function ipauthentication(destination_number,from_ip)
     return ipinfo;
 end
 
-
 -- Do Account authorization
 function doauthorization(accountcode,call_direction,destination_number,number_loop)
 	local callstart = os.date("!%Y-%m-%d %H:%M:%S")

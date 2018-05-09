@@ -46,6 +46,7 @@ function freeswitch_xml_header(xml,destination_number,accountcode,maxlength,call
 	table.insert(xml, [[<action application="set" data="callstart=]]..callstart..[["/>]]);
 	table.insert(xml, [[<action application="set" data="hangup_after_bridge=true"/>]]);    
 	table.insert(xml, [[<action application="set" data="continue_on_fail=true"/>]]);  
+	table.insert(xml, [[<action application="set" data="sip_h_X-Astpp-Redirect=${uuid}"/>]]);     
 	--table.insert(xml, [[<action application="set" data="ignore_early_media=true"/>]]);       
 
 	table.insert(xml, [[<action application="set" data="account_id=]]..customer_userinfo['id']..[["/>]]);              
@@ -234,6 +235,7 @@ function freeswitch_xml_inbound(xml,didinfo,userinfo,config,xml_did_rates,caller
 	-----------------------------------------------
 
 	table.insert(xml, [[<action application="set" data="receiver_accid=]]..didinfo['accountid']..[["/>]]);  
+	table.insert(xml, [[<action application="set" data="sip_h_X-Astpp-Account=]]..didinfo['account_code']..[["/>]]);
 	-- Set max channel limit for did if > 0     
 	if(tonumber(didinfo['maxchannels']) > 0) then    
 		table.insert(xml, [[<action application="limit" data="db ]]..destination_number..[[ did_]]..destination_number..[[ ]]..didinfo['maxchannels']..[[ !SWITCH_CONGESTION"/>]]);        
@@ -247,11 +249,10 @@ function freeswitch_xml_inbound(xml,didinfo,userinfo,config,xml_did_rates,caller
 	local deli_str = {}
 	string.gsub(didinfo['extensions'], "([,|]+)", function(value) deli_str[#deli_str + 1] =     value;  end);
 
-	table.insert(xml, [[<action application="set" data="registeredon=]]..didinfo['registeredon']..[["/>]]);     
+	table.insert(xml, [[<action application="set" data="registeredon=]]..didinfo['registeredon']..[[" inline="true" />]]);     
 
 	if (tonumber(didinfo['call_type']) == 0 and didinfo['extensions'] ~= '') then
 		table.insert(xml, [[<action application="set" data="calltype=STANDARD"/>]]);     
-		table.insert(xml, [[<action application="set" data="accountcode=]]..didinfo['account_code']..[["/>]]);
 		table.insert(xml, [[<action application="set" data="caller_did_account_id=]]..userinfo['id']..[["/>]]);
 		table.insert(xml, [[<action application="set" data="origination_rates_did=]]..xml_did_rates..[["/>]]);
 		table.insert(xml, [[<action application="transfer" data="]]..didinfo['extensions']..[[ XML default"/>]]);
@@ -395,14 +396,23 @@ function xml_header(xml,destination_number)
 	return xml
 end
 
+-- Generate dialplan to redirect to other server
+-- This must be run BEFORE voicemail
+function redirect_to_other(xml)
+	table.insert(xml, [[<condition field="${cond(${registeredon} != 0 ? ${registeredon} : "")}" expression="^(.+)$" break="on-true">]])
+		table.insert(xml, [[<action application="bridge" data="sofia/default/$${effective_destination_number}@$1:5090"/>]]);
+	table.insert(xml, [[</condition>]])
+end
+
 -- To Leave voicemail dialplan 
 function leave_voicemail(xml,vm_alternate_greet_id,vm_destination)
+	redirect_to_other(xml)
 	table.insert(xml, [[<condition field="${cond(${user_data ]]..vm_destination..[[@${domain_name} param vm-enabled} == true ? YES : NO)}" expression="^YES$">]])
-    table.insert(xml, [[<action application="answer"/>]]);    
+	table.insert(xml, [[<action application="answer"/>]]);    
 	table.insert(xml, [[<action application="export" data="voicemail_alternate_greet_id=]]..vm_alternate_greet_id..[["/>]]);  
-    table.insert(xml, [[<action application="voicemail" data="default $${domain_name} ]]..vm_destination..[["/>]]);    
-    table.insert(xml, [[<anti-action application="hangup" data="${originate_disposition}"/>]])
-    table.insert(xml, [[</condition>]])
+	table.insert(xml, [[<action application="voicemail" data="default $${domain_name} ]]..vm_destination..[["/>]]);    
+	table.insert(xml, [[<anti-action application="hangup" data="${originate_disposition}"/>]])
+	table.insert(xml, [[</condition>]])
 end
 
 -- Generate voicemail dialplan

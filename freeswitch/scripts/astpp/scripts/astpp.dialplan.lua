@@ -121,6 +121,11 @@ then
 	accountcode = params:getHeader('variable_sip_h_P-Accountcode');
 end
 
+-- If we are on the xconnect profile, trust X-Astpp-Account if it exists.
+if (params:getHeader('variable_sofia_profile_name') == 'xconnect' ) then
+	accountcode = params:getHeader('variable_sip_h_X-Astpp-Account')
+end
+
 -- If no account code found then do further authentication of call
 if (accountcode == nil or accountcode == '') then
 
