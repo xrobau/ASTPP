@@ -110,12 +110,12 @@ function check_did(destination_number,config)
 
 	assert(dbh:query(query, function(u)
 		didinfo = u
-		return u
-	end))
-	local regquery = "select hostname from freeswitch.registrations where reg_user=\""..didinfo['extensions'].."\" order by expires desc limit 1"
-	Logger.debug("[CHECK_DID] Get Registrations Query :" .. regquery)
-	assert(dbh:query(regquery, function(u)
-		didinfo['registeredon'] = u['hostname']
+		local regquery = "select hostname from freeswitch.registrations where reg_user=\""..didinfo['extensions'].."\" order by expires desc limit 1"
+		Logger.debug("[CHECK_DID] Get Registrations Query :" .. regquery)
+		assert(dbh:query(regquery, function(u)
+			didinfo['registeredon'] = u['hostname']
+			return u
+		end))
 		return u
 	end))
 	return didinfo;

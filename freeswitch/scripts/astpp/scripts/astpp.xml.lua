@@ -249,7 +249,9 @@ function freeswitch_xml_inbound(xml,didinfo,userinfo,config,xml_did_rates,caller
 	local deli_str = {}
 	string.gsub(didinfo['extensions'], "([,|]+)", function(value) deli_str[#deli_str + 1] =     value;  end);
 
-	table.insert(xml, [[<action application="set" data="registeredon=]]..didinfo['registeredon']..[[" inline="true" />]]);     
+	if (didinfo['registeredon'] ~= nil) then
+		table.insert(xml, [[<action application="set" data="registeredon=]]..didinfo['registeredon']..[[" inline="true" />]]);
+	end
 
 	if (tonumber(didinfo['call_type']) == 0 and didinfo['extensions'] ~= '') then
 		table.insert(xml, [[<action application="set" data="calltype=STANDARD"/>]]);     
