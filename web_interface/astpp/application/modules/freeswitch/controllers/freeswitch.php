@@ -849,7 +849,7 @@ class Freeswitch extends MX_Controller {
 				redirect ( base_url () . 'freeswitch/fssipprofile_add/' );
 				exit ();
 			}*/
-			$sipprofile_data ['id'] = '';
+			$sipprofile_data ['id'] = null;
 			$check_authentication = $this->freeswitch_model->profile_authentication ( $sipprofile_data );
 			if ($check_authentication->num_rows () == 0) {
 				
