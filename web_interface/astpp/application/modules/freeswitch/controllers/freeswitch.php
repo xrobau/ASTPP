@@ -698,7 +698,7 @@ class Freeswitch extends MX_Controller {
 		$this->db_model->delete ( "gateways", array (
 				"id" => $gateway_id 
 		) );
-		$this->freeswitch_model->reload_freeswitch ( $cmd, $sip_ip );
+		$this->freeswitch_model->reload_freeswitch ( $cmd );
 		$this->session->set_flashdata ( 'astpp_notification', 'Gateway Removed Successfully!' );
 		redirect ( base_url () . 'freeswitch/fsgateway/' );
 	}
@@ -849,7 +849,7 @@ class Freeswitch extends MX_Controller {
 				redirect ( base_url () . 'freeswitch/fssipprofile_add/' );
 				exit ();
 			}*/
-			$sipprofile_data ['id'] = '';
+			$sipprofile_data ['id'] = null;
 			$check_authentication = $this->freeswitch_model->profile_authentication ( $sipprofile_data );
 			if ($check_authentication->num_rows () == 0) {
 				

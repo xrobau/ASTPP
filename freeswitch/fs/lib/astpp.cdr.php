@@ -65,7 +65,7 @@ function process_cdr($data, $db, $logger, $decimal_points, $config) {
 	if (isset($dataVariable['billsec']) && $dataVariable ['billsec'] == 0 && $dataVariable ['hangup_cause'] == 'NORMAL_CLEARING') {
 		$hangup_cause = isset ( $dataVariable ['last_bridge_hangup_cause'] ) ? $dataVariable ['last_bridge_hangup_cause'] : $dataVariable ['hangup_cause'];
 	} else {
-		$hangup_cause = $dataVariable ['hangup_cause'];
+		$hangup_cause = $dataVariable['hangup_cause'];
 	}
 	
 	if (isset($dataVariable ['error_cdr']) && $dataVariable ['error_cdr'] == '1') {
@@ -507,22 +507,55 @@ function table_exists($tablename, $database, $logger, $db) {
 
 // Calculate cost for billing
 function calc_cost($dataVariable, $rates, $logger, $decimal_points) {
-	// $logger->log(print_r($rates,true));
-	$duration = isset($dataVariable['billsec'])?$dataVariable ['billsec']:0;
-	$call_cost = 0;
-	if (isset($rates['INCLUDEDSECONDS'])) {
+	$duration = (int) isset($dataVariable['billsec'])?$dataVariable ['billsec']:0;
+
+	// If the call was less than 1 second), or we don't have any rates, it didn't
+	// cost anything
+	if ($duration < 1 || empty($rates)) {
+		return 0;
+	}
+
+	$call_cost = $rates['CONNECTIONCOST'];
+	$costpermin = (int) empty($rates['COST'])?"0":$rates['COST'];
+
+	// If we had some included seconds for that connection cost, subtract them
+	// from the call length.
+	if (!empty($rates['INCLUDEDSECONDS'])) {
 		$duration -= $rates['INCLUDEDSECONDS'];
 	}
-	if ($duration > 0 && isset($rates['INC'])) {
-		$rates ['INC'] = ($rates ['INC'] == 0) ? 1 : $rates ['INC'];
-		$rates ['INITIALBLOCK'] = ($rates ['INITIALBLOCK'] == 0) ? 1 : $rates ['INITIALBLOCK'];
-		$call_cost = $rates ['CONNECTIONCOST'];
-		$call_cost += ($rates ['INITIALBLOCK'] * $rates ['COST']) / 60;
-		$billseconds = $duration - $rates ['INITIALBLOCK'];
-		
-		if ($billseconds > 0) {
-			$call_cost += (ceil ( $billseconds / $rates ['INC'] ) * $rates ['INC']) * ($rates ['COST'] / 60);
+
+	// If there is any duration left, we need to bill for that.
+	if ($duration > 0) {
+
+		// Take off the 'Initial Increment', and bill for that.
+		if (empty($rates['INITIALBLOCK']) || $rates['INITIALBLOCK'] < 1) {
+			$initial = 1;
+		} else {
+			$initial = $rates['INITIALBLOCK'];
 		}
+
+		// Take the initial increment (in seconds) and figure out how much it cost.
+		$call_cost += ($costpermin / 60) * $initial;
+
+		$duration -= $initial;
+
+		// Now, if there's any duration left, bill for that per INCrement.
+		if ($duration > 0) {
+			// We should always have an increment, but maybe we don't?
+			if (!empty($rates['INC']) && $rates['INC'] > 0) {
+				$inc = $rates['INC'];
+
+				// How much does each INCrement cost?
+				$inccost = ($costpermin / 60) / (60 / $inc);
+
+				// How many INCrements are there?
+				$blocks = (int) ceil($duration / $inc);
+
+				// Add that to the call cost
+				$call_cost += $blocks * $inccost;
+			}
+		}
+
 	}
 	$call_cost = number_format ( $call_cost, $decimal_points );
 	$logger->log ( "Return cost " . $call_cost );

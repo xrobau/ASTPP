@@ -33,6 +33,32 @@ function load_conf()
     return config;
 end
 
+-- Remap destination numbers
+-- This avoids the need to duplicate data in rate groups. This is used
+-- in Australia, for example, where calls can be sent as '617xxxxxxxx' or
+-- '07xxxxxxxx', but all the billing is based around 617xxxxxxxx.
+--
+-- Important note: This does NOT scale well for a high volume system. It would
+-- be unwise to have more than 20 or 30 entries here, as it's CPU and Database
+-- intensive (Make sure you have Query Caching turned on!)
+--
+-- create table dialed_remap ( prefix char(10) not null, remap char(10) default '' );
+--
+function remap_dest_number(orig_dest_number)
+	local query = "SELECT * FROM dialed_remap";
+    	assert (dbh:query(query, function(u)
+		Logger.debug("[REMAP] Checking prefix:"..u['prefix']..", remap: "..u['remap'])
+		if (string.sub(orig_dest_number, 1, string.len(u['prefix'])) == u['prefix']) then
+			s = string.gsub(orig_dest_number, u['prefix'], u['remap'], 1)
+			Logger.debug("[REMAP] Matched. New Number "..s)
+			orig_dest_number = s
+			return s
+		end
+	end))
+	return orig_dest_number;
+end
+
+
 -- Get Speed dial number value
 function get_speeddial_number(destination_number,accountid)  
 	local query = "SELECT A.number FROM "..TBL_SPEED_DIAL.." as A,"..TBL_USERS.." as B WHERE B.status=0 AND B.deleted=0 AND B.id=A.accountid AND A.speed_num =\"" ..destination_number .."\" AND A.accountid = '"..accountid.."' limit 1";
@@ -82,8 +108,15 @@ function check_did(destination_number,config)
 
 	Logger.debug("[CHECK_DID] Query :" .. query)
 
-	assert (dbh:query(query, function(u)
-	didinfo = u;
+	assert(dbh:query(query, function(u)
+		didinfo = u
+		local regquery = "select hostname from freeswitch.registrations where reg_user=\""..didinfo['extensions'].."\" order by expires desc limit 1"
+		Logger.debug("[CHECK_DID] Get Registrations Query :" .. regquery)
+		assert(dbh:query(regquery, function(u)
+			didinfo['registeredon'] = u['hostname']
+			return u
+		end))
+		return u
 	end))
 	return didinfo;
 end
@@ -125,7 +158,12 @@ end
 -- Do IP base authentication 
 function ipauthentication(destination_number,from_ip)
 
-    local query = "SELECT "..TBL_IP_MAP..".*, (SELECT number FROM "..TBL_USERS.." where id=accountid AND status=0 AND deleted=0) AS account_code FROM "..TBL_IP_MAP.." WHERE ((INET_ATON(\"" .. from_ip.. "\") & (0xFFFFFFFF & (-1 << 32 - SUBSTRING_INDEX(ip, '/',-1)))) =  ((0xFFFFFFFF & (-1 << 32 - SUBSTRING_INDEX(ip, '/',-1))) & INET_ATON(SUBSTRING_INDEX(ip,'/',1)))) AND (status =0) AND ((SUBSTRING( ip, 1, CHAR_LENGTH( ip ) -3 ) = \"" .. from_ip.. "\" AND prefix IN (NULL,'')) OR (SUBSTRING( ip, 1, CHAR_LENGTH( ip ) -3 ) = \"" .. from_ip.. "\" AND \"" .. destination_number .. "\"  RLIKE prefix)) ORDER BY LENGTH(prefix) DESC LIMIT 1"
+    ---
+    -- This makes no sense. You can't match SUBSTRING( ip, 1, CHAR_LENGTH( ip ) -3 ) = \"" .. from_ip.. "\" AND prefix IN (NULL,'') because
+    -- that's saying the network has to EXACTLY match. I don't know how this ever worked.
+    --
+    -- local query = "SELECT "..TBL_IP_MAP..".*, (SELECT number FROM "..TBL_USERS.." where id=accountid AND status=0 AND deleted=0) AS account_code FROM "..TBL_IP_MAP.." WHERE ((INET_ATON(\"" .. from_ip.. "\") & (0xFFFFFFFF & (-1 << 32 - SUBSTRING_INDEX(ip, '/',-1)))) =  ((0xFFFFFFFF & (-1 << 32 - SUBSTRING_INDEX(ip, '/',-1))) & INET_ATON(SUBSTRING_INDEX(ip,'/',1)))) AND (status =0) AND ((SUBSTRING( ip, 1, CHAR_LENGTH( ip ) -3 ) = \"" .. from_ip.. "\" AND prefix IN (NULL,'')) OR (SUBSTRING( ip, 1, CHAR_LENGTH( ip ) -3 ) = \"" .. from_ip.. "\" AND \"" .. destination_number .. "\"  RLIKE prefix)) ORDER BY LENGTH(prefix) DESC LIMIT 1"
+    local query = "SELECT "..TBL_IP_MAP..".*, (SELECT number FROM "..TBL_USERS.." where id=accountid AND status=0 AND deleted=0) AS account_code FROM "..TBL_IP_MAP.." WHERE ((INET_ATON(\"" .. from_ip.. "\") & (0xFFFFFFFF & (-1 << 32 - SUBSTRING_INDEX(ip, '/',-1)))) =  ((0xFFFFFFFF & (-1 << 32 - SUBSTRING_INDEX(ip, '/',-1))) & INET_ATON(SUBSTRING_INDEX(ip,'/',1)))) AND (status =0) OR (SUBSTRING( ip, 1, CHAR_LENGTH( ip ) -3 ) = \"" .. from_ip.. "\" AND \"" .. destination_number .. "\"  RLIKE prefix) ORDER BY LENGTH(prefix) DESC LIMIT 1"
 
     Logger.debug("[IPAUTHENTICATION] Query :" .. query)
     
@@ -136,7 +174,6 @@ function ipauthentication(destination_number,from_ip)
     end))
     return ipinfo;
 end
-
 
 -- Do Account authorization
 function doauthorization(accountcode,call_direction,destination_number,number_loop)

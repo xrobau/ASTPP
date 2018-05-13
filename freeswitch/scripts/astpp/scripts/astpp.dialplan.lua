@@ -20,14 +20,15 @@
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --------------------------------------------------------------------------------------
 
-destination_number = params:getHeader("Caller-Destination-Number")
+orig_destination_number = params:getHeader("Caller-Destination-Number")
 
-if (destination_number == nil) then
+if (orig_destination_number == nil) then
     return;
 end
 
-Logger.info("[Dialplan] Dialed number : "..destination_number)
-
+Logger.info("[Dialplan] Original Dialed number : "..orig_destination_number)
+destination_number = remap_dest_number(orig_destination_number)
+Logger.info("[Dialplan] Remapped  Dialed number : "..destination_number)
 
 --Check if dialed number is calling card access number
 if (config['cc_access_numbers'] ~= '') then 
@@ -118,6 +119,11 @@ Logger.info("[Dialplan] Call direction : ".. call_direction)
 if(config['opensips']=='0' and params:getHeader('variable_sip_h_P-Accountcode') ~= '' and params:getHeader('variable_sip_h_P-Accountcode') ~= nil and params:getHeader("variable_accountcode") == nil and params:getHeader('variable_sip_h_P-Accountcode') ~= '<null>')
 then
 	accountcode = params:getHeader('variable_sip_h_P-Accountcode');
+end
+
+-- If we are on the xconnect profile, trust X-Astpp-Account if it exists.
+if (params:getHeader('variable_sofia_profile_name') == 'xconnect' ) then
+	accountcode = params:getHeader('variable_sip_h_X-Astpp-Account')
 end
 
 -- If no account code found then do further authentication of call

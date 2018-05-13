@@ -1,0 +1,3 @@
+# Everything in here goes via Slim
+RewriteEngine on
+RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
