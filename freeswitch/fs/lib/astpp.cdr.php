@@ -527,6 +527,8 @@ function calc_cost($dataVariable, $rates, $logger, $decimal_points) {
 	// If there is any duration left, we need to bill for that.
 	if ($duration > 0) {
 
+		$costpersec = $costpermin / 60;
+
 		// Take off the 'Initial Increment', and bill for that.
 		if (empty($rates['INITIALBLOCK']) || $rates['INITIALBLOCK'] < 1) {
 			$initial = 1;
@@ -535,7 +537,7 @@ function calc_cost($dataVariable, $rates, $logger, $decimal_points) {
 		}
 
 		// Take the initial increment (in seconds) and figure out how much it cost.
-		$call_cost += ($costpermin / 60) * $initial;
+		$call_cost += ($costpersec * $initial);
 
 		$duration -= $initial;
 
@@ -543,13 +545,12 @@ function calc_cost($dataVariable, $rates, $logger, $decimal_points) {
 		if ($duration > 0) {
 			// We should always have an increment, but maybe we don't?
 			if (!empty($rates['INC']) && $rates['INC'] > 0) {
-				$inc = $rates['INC'];
-
 				// How much does each INCrement cost?
-				$inccost = ($costpermin / 60) / (60 / $inc);
+				$inclength = $rates['INC'];
+				$inccost = $costpersec * $inclength;
 
 				// How many INCrements are there?
-				$blocks = (int) ceil($duration / $inc);
+				$blocks = (int) ceil($duration / $inclength);
 
 				// Add that to the call cost
 				$call_cost += $blocks * $inccost;
