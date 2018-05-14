@@ -104,6 +104,12 @@ $api->get("/v1/customer/createdevice", function($req, $resp) {
 
 });
 
+$api->get("/v1/recentcalls/{acctname}", function($req, $resp) {
+	$acct = $req->getAttribute('acctname');
+	$calls = new ASTPP\RecentCalls;
+	return $resp->withJson($calls->getRecent($acct));
+});
+
 
 $api->run();
 

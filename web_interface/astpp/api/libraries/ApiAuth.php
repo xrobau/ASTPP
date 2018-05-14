@@ -43,7 +43,7 @@ class ApiAuth {
 		}
 
 		// Is this IP allowed to use the API?
-		if (!isset($validhosts[$remote])) {
+		if ($remote !== "127.0.0.1" && !isset($validhosts[$remote])) {
 			throw new \Exception("Host $remote not allowed to use the API");
 		}
 
