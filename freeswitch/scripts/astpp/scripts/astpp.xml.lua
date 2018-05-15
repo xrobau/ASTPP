@@ -45,7 +45,7 @@ function freeswitch_xml_header(xml,destination_number,accountcode,maxlength,call
      
 	table.insert(xml, [[<action application="set" data="callstart=]]..callstart..[["/>]]);
 	table.insert(xml, [[<action application="set" data="hangup_after_bridge=true"/>]]);    
-	table.insert(xml, [[<action application="set" data="continue_on_fail=!USER_BUSY"/>]]);  
+	table.insert(xml, [[<action application="set" data="continue_on_fail=!USER_BUSY,!UNALLOCATED_NUMBER"/>]]);  
 	table.insert(xml, [[<action application="set" data="sip_h_X-Astpp-Redirect=${uuid}"/>]]);     
 	--table.insert(xml, [[<action application="set" data="ignore_early_media=true"/>]]);       
 
