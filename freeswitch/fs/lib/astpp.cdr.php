@@ -527,7 +527,11 @@ function calc_cost($dataVariable, $rates, $logger, $decimal_points) {
 	// If there is any duration left, we need to bill for that.
 	if ($duration > 0) {
 
-		$costpersec = $costpermin / 60;
+		if ($costpermin) {
+			$costpersec = $costpermin / 60;
+		} else {
+			$costpersec = 0;
+		}
 
 		// Take off the 'Initial Increment', and bill for that.
 		if (empty($rates['INITIALBLOCK']) || $rates['INITIALBLOCK'] < 1) {
