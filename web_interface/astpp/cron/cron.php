@@ -1,5 +1,12 @@
 #!/usr/bin/php
 <?php
+
+error_reporting(-1);
+include __DIR__.'/../vendor/autoload.php';
+$whoops = new \Whoops\Run;
+$whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+$whoops->register();
+
 // Run: php cron.php controller/method/
 // Block non-CLI calls
 define ( 'CRON', TRUE );
@@ -51,4 +58,4 @@ else
 	ob_end_clean ();
 
 echo "\n";
-?>
+
