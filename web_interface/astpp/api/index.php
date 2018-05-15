@@ -25,6 +25,11 @@ $api = new \Slim\App( [
  */
 $api->add(new \API\ApiAuth);
 
+
+$api->get("/ping", function($req, $resp) {
+	return $resp->withJson(["pong" => true]);
+});
+
 /**
  * Get all customers.
  *
@@ -108,6 +113,18 @@ $api->get("/v1/recentcalls/{acctname}", function($req, $resp) {
 	$acct = $req->getAttribute('acctname');
 	$calls = new ASTPP\RecentCalls;
 	return $resp->withJson($calls->getRecent($acct));
+});
+
+$api->get("/v1/registrations/{acctname}", function($req, $resp) {
+	$acct = $req->getAttribute('acctname');
+	$calls = new ASTPP\Registrations;
+	return $resp->withJson($calls->getRegs($acct));
+});
+
+$api->get("/v1/currentcalls/{acctname}", function($req, $resp) {
+	$acct = $req->getAttribute('acctname');
+	$calls = new ASTPP\Activecalls;
+	return $resp->withJson($calls->getCalls($acct));
 });
 
 
