@@ -59,6 +59,7 @@ class Charges_model extends CI_Model {
 		$reseller_id = ($accountinfo['type'] == 1 || $accountinfo['type'] ==5) ? $accountinfo['id'] : 0 ;
 		
 		unset ( $add_array ['action'] );
+		unset ( $add_array ['id'] );
 		$this->db->insert ( "charges", $add_array );
 		$insert_id = $this->db->insert_id ();
 		$data = $this->db_model->getSelect ( "*", "accounts", array (
