@@ -55,7 +55,7 @@
      <link href="<?= base_url() ?>assets/css/global-style.css" rel="stylesheet" type="text/css"/>
      <link href="<?php echo base_url(); ?>assets/css/facebox.css" rel="stylesheet" media="all" />	
      <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/flexigrid.css" type="text/css"/>
-     <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery-1.7.1.js"></script>
+     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
      <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/bootstrap.min.js"></script>
      <script type="text/javascript" src="<?php echo base_url(); ?>/assets/js/jquery.datetimepicker.js"></script>
      <script type="text/javascript" src="<?php echo base_url(); ?>/assets/js/fileinput.js"></script>
@@ -88,10 +88,8 @@ function PopupCenter(url, title, w, h) {
         newWindow.focus();
     }
 }
-SyntaxHighlighter.all();
-jQuery(document).ready(function() {
-   $("select").searchable();
-});        
+// SyntaxHighlighter.all();
+jQuery(document).ready(function() { $("select").searchable(); });        
 </script> 
 </head>
 <body>    
