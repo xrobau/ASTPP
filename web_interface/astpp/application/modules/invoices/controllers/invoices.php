@@ -235,6 +235,7 @@ class Invoices extends MX_Controller {
 		$invoice_total_query = $this->db->query ( $query );
 		$data ['count'] = 0;
 		$data ['row_count'] = 5;
+		$data ['get_data'] = array();
 		if ($invoice_total_query->num_rows () > 0) {
 			$count = $invoice_total_query->num_rows ();
 			$data ['count'] = $count;
