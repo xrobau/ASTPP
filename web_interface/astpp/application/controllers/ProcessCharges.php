@@ -369,7 +369,7 @@ class ProcessCharges extends MX_Controller {
 		$billing_cycle = ($itemArr ['BillCycle'] == "0") ? "1 day" : "1 month";
 		$last_invoice_date = $itemArr ['LastBillDate'];
 		
-		echo "Last Invoice date : ".$last_invoice_date." || Billing Cycle : ".$billing_cycle;
+		// echo "Last Invoice date : ".$last_invoice_date." || Billing Cycle : ".$billing_cycle;
 		
 		// get array between start and end date based on the billing cycle.
 		$DateRangArr = $this->Get_Date_Range_Array ( $billing_cycle, $itemArr, $StartDate, $EndDate );
@@ -425,7 +425,7 @@ class ProcessCharges extends MX_Controller {
 			}
 		}
 		
-		echo ( "Last Invoice id : ".$last_invoice_date);
+		// echo ( "Last Invoice id : ".$last_invoice_date);
 		
 		return $last_invoice_date;
 	}
