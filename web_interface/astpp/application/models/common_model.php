@@ -341,7 +341,7 @@ class Common_model extends CI_Model {
 							"item_id" => "0",
 							"description" => $tax_value ['taxes_description'],
 							"debit" => $tax_total,
-							"credit" => "",
+							"credit" => "0.00",
 							"item_type" => "TAX",
 							"created_date" => $start_date 
 					);
