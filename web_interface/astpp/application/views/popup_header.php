@@ -3,11 +3,7 @@
 <head>
 
 <link href="<?= base_url() ?>assets/css/bootstrap.min.css" rel="stylesheet"/>
-
-<link rel="stylesheet" href="<?php echo base_url(); ?>assets/status/dist/css/bootstrap-select.css" />
-<link href="<?= base_url() ?>assets/css/global-style.css" rel="stylesheet" type="text/css"/>
-<script src="<?= base_url() ?>assets/js/maxcdn_bootstrap.min.js"></script>
-<script src="<?php echo  base_url(); ?>assets/status/dist/js/bootstrap-select.js"></script>
+<link href="<?= base_url() ?>assets/css/global-style.css" rel="stylesheet"/>
 
 <script type="text/javascript">
     

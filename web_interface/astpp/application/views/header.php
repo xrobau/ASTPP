@@ -47,7 +47,7 @@
 
      <link href="<?= base_url() ?>assets/css/checkbox.css" rel="stylesheet"/>
      <link href="<?= base_url() ?>assets/css/bootstrap.min.css" rel="stylesheet"/>
-     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/bootstrap-select.css"/>
+     <link rel="stylesheet" href="<?= base_url() ?>assets/css/bootstrap-select.css" />
      <link href="<?= base_url() ?>assets/css/sidebar_style.css" rel="stylesheet" type="text/css"/>
      <link href="<?php echo base_url(); ?>/assets/css/jquery.datetimepicker.css" rel="stylesheet" />
      <link rel="stylesheet" media="all" type="text/css" href="<?php echo base_url(); ?>/assets/css/tabcontent.css"/>
@@ -55,16 +55,16 @@
      <link href="<?= base_url() ?>assets/css/global-style.css" rel="stylesheet" type="text/css"/>
      <link href="<?php echo base_url(); ?>assets/css/facebox.css" rel="stylesheet" media="all" />	
      <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/flexigrid.css" type="text/css"/>
-     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-     <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/bootstrap.min.js"></script>
-     <script type="text/javascript" src="<?php echo base_url(); ?>/assets/js/jquery.datetimepicker.js"></script>
-     <script type="text/javascript" src="<?php echo base_url(); ?>/assets/js/fileinput.js"></script>
-     <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/tabcontent.js"></script>
-     <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/respond.js"></script>
-     <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/respond.src.js"></script> 
-     <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/facebox.js"></script>
-     <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/flexigrid.js"></script>
-     <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/module_js/generate_grid.js"></script>
+     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+     <script src="<?= base_url() ?>/assets/js/jquery.datetimepicker.js"></script>
+     <script src="<?= base_url() ?>/assets/js/fileinput.js"></script>
+     <script src="<?= base_url() ?>assets/js/tabcontent.js"></script>
+     <script src="<?= base_url() ?>assets/js/respond.js"></script>
+     <script src="<?= base_url() ?>assets/js/respond.src.js"></script> 
+     <script src="<?= base_url() ?>assets/js/facebox.js"></script>
+     <script src="<?= base_url() ?>assets/js/flexigrid.js"></script>
+     <script src="<?= base_url() ?>assets/js/module_js/generate_grid.js"></script>
     <noscript>
       <div id="noscript-warning">
 	<?php echo gettext('ASTPP work best with JavaScript enabled'); ?>
@@ -88,8 +88,6 @@ function PopupCenter(url, title, w, h) {
         newWindow.focus();
     }
 }
-// SyntaxHighlighter.all();
-jQuery(document).ready(function() { $("select").searchable(); });        
 </script> 
 </head>
 <body>    

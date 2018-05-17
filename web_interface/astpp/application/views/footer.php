@@ -1,5 +1,4 @@
-<script src="<?php echo  base_url(); ?>assets/js/bootstrap-select.js"></script>
-<script src="<?= base_url() ?>assets/js/maxcdn_bootstrap.min.js"></script>
+<script src="<?= base_url() ?>assets/js/bootstrap-select-1.12.4.js"></script>
 </section>
 </span></span>
 <footer class="site-footer"> 
