@@ -2,7 +2,7 @@
 <table cellspacing="1" style="width:100%; padding-right:50px; padding-left:50px;" border="0" align="right">
    <tr>
    <td style="width:60%;">
-		 <img src="<LOGO>" style='height:50px;margin-top:30px;width:181px;float:left;'/>
+		 <img src="<LOGO>" style='height:50px;margin-top:30px;float:left;'/>
    </td>
 	<INVOICE_NUM>
    </tr>
@@ -15,7 +15,7 @@
 		</td>
 
 		<td style="width:50%;" align="right">
-		<b>Bill To :</b>
+		<b>Invoice To:</b>
 		
 		    
 		</td>

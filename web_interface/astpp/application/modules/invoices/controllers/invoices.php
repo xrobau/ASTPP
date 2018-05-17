@@ -801,8 +801,12 @@ class Invoices extends MX_Controller {
 		$generateInvoice->download_invoice ( $invoicedata ['id'], $accountdata, $invoice_conf, $inv_flag );
 		return true;
 	}
-	function currency_decimal($amount) {
-		$decimal_amount = Common_model::$global_config ['system_config'] ['decimalpoints'];
+	function currency_decimal($amount, $limit = false) {
+		if ($limit) {
+			$decimal_amount = $limit;
+		} else {
+			$decimal_amount = Common_model::$global_config ['system_config'] ['decimalpoints'];
+		}
 		$number_convert = number_format ( ( float ) $amount, $decimal_amount, '.', '' );
 		return $number_convert;
 	}
@@ -1910,7 +1914,7 @@ class Invoices extends MX_Controller {
 		/**
 		 * ****************************Invoivce number*************************************************************
 		 */
-		$INVOICE_NUM = '<td style="font-size: 10px;color:#000;font-family:arial; line-height: 22px;letter-spacing:02;float:right;"><b><h2>Receipt: ' . $invoicedata ["invoice_prefix"] . $data ['id'] . '</h2></b></td>';
+		$INVOICE_NUM = '<td style="font-size: 10px;color:#000;font-family:arial; line-height: 22px;letter-spacing:02;float:right;"><b><h2>Tax Invoice: ' . $invoicedata ["invoice_prefix"] . $data ['id'] . '</h2></b></td>';
 		/**
 		 * ************************* Company Address Code START **************************************************
 		 */
@@ -1947,36 +1951,21 @@ class Invoices extends MX_Controller {
 		$INVOICE_DETAIL .= '<tr>
                                 <td style="width:100%;">
                                 <table style="width:100%;" cellspacing="0">
-                                <tbody><tr>
-                               
-                                <td style="width:25%;"><b>Receipt Date :</b></td>
-                                <td style="width:25%;text-align:right;border-right:1px solid #000; padding-right: 3px;">' . date ( "Y-m-d", strtotime ( $invoicedata ['from_date'] ) ) . '</td>
-                                <td style="width:25%;"><b>This Receipt Amount :</b> </td>
-                                <td style="width:25%;text-align:right;">' . $this->currency_decimal ( $this->common_model->calculate_currency ( $invoicedata ['amount'] ) ) . '</td>
-                                </tr>
-                                <tr>
-                               
-                                <td style="width:25%;"></td>
-                                <td style="width:25%;border-right:1px solid #000;"></td>
-                                <td style="width:25%;"></td>
-                                <td style="width:25%;"></td>
-                                </tr>
-                                  
-                                <tr>
-                                <td style="width:25%;border-bottom:1px solid #000;"><b>Account Number :</b></td>
-                                <td style="width:25%;border-bottom:1px solid #000;text-align:right;border-right:1px solid #000;padding-right: 3px;">' . $accountdata ['number'] . '</td>
-                                <td colspan="2" style="width:50%;padding-left: 3px;">
-                                <table style="border:1px solid #000;width:100%;">
-                                <tbody><tr>
-                                <td style="width:50%;font-weight:bold;font-style:italic;">Total Amount :</td>
-                                <td style="width:50%;text-align:right;font-style:italic;">' . $this->currency_decimal ( $this->common_model->calculate_currency ( $invoicedata ['amount'] ) ) . '</td>
-                                </tr>
-                                </tbody></table>
-                                </td>
-                                </tr>
-                                </tbody></table>
-                                </td>
-                             </tr>';
+				  <tbody>
+				    <tr>
+                                      <td style="width:25%;padding: 10px"><b>Invoice Date:</b> </td>
+                                      <td style="width:25%;padding: 10px;text-align:left;border-right:1px solid #000">' . date ( "Y-m-d", strtotime ( $invoicedata ['from_date'] ) ) . '</td>
+                                    </tr>
+                                    <tr>
+                                      <td style="width:25%;padding: 10px; border-bottom:1px solid #000;"><b>Account Number :</b></td>
+                                      <td style="width:25%;padding: 10px; border-bottom:1px solid #000;text-align:left;border-right:1px solid #000;">' . $accountdata ['number'] . '</td>
+                                      <td style="width:25%;padding: 10px;border-bottom:1px solid #000;text-align:left;font-weight:bold;font-style:italic;">Total Amount:</td>
+                                      <td style="width:25%;padding: 10px;border-bottom:1px solid #000;text-align:right;font-weight:bold;font-style:italic;">$' . $this->currency_decimal ( $this->common_model->calculate_currency ( $invoicedata ['amount'] ), 2 ) . '</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </td>
+                           </tr>';
 		
 		/**
 		 * *************************Invoice detail END *******************************************************
@@ -2000,16 +1989,24 @@ class Invoices extends MX_Controller {
 		$INVOICE_CHARGE .= '<tr >
                                                         <td style="width:20%;line-height:15px;border-left:1px solid #000;border-bottom:1px solid #000;padding:5px;">' . date ( 'Y-m-d', strtotime ( $invoicedata ['invoice_date'] ) ) . '</td>
                                                         <td style="width:40%;line-height:15px;border-left:1px solid #000;border-bottom:1px solid #000;padding:5px;">' . $data ['description'] . '</td>
-                                                        <td style="width:20%;line-height:15px;border-left:1px solid #000;border-bottom:1px solid #000;text-align:right;padding:5px;">' . $this->currency_decimal ( $this->common_model->calculate_currency ( $invoicedata ['amount'] ) ) . '</td>
-                                                        <td style="width:20%;line-height:15px;border-right:1px solid #000;border-left:1px solid #000;border-bottom:1px solid #000;text-align:right;padding:5px;">' . $this->currency_decimal ( $this->common_model->calculate_currency ( $invoicedata ['amount'] ) ) . '</td>
+                                                        <td style="width:20%;line-height:15px;border-left:1px solid #000;border-bottom:1px solid #000;text-align:right;padding:5px;">$' . $this->currency_decimal ( $this->common_model->calculate_currency ( $invoicedata ['amount'] ), 2 ) . '</td>
+                                                        <td style="width:20%;line-height:15px;border-right:1px solid #000;border-left:1px solid #000;border-bottom:1px solid #000;text-align:right;padding:5px;">$' . $this->currency_decimal ( $this->common_model->calculate_currency ( $invoicedata ['amount'] ),2 ) . '</td>
                                                      </tr>';
 		
 		$INVOICE_CHARGE .= '<tr>
                                                 <td></td><td></td>
                                                 <td  style="border-left:1px solid #000;border-bottom:1px solid #000;width:20%;padding:5px;text-align:left;" align="right">Sub Total</td>
-                                                <td style="border-left:1px solid #000;border-bottom:1px solid #000;border-right:1px solid #000;width:10%;text-align:right;padding-top:5px;padding-right:5px;">' . $this->currency_decimal ( $this->common_model->calculate_currency ( $invoicedata ['amount'] ) ) . '</td>
+                                                <td style="border-left:1px solid #000;border-bottom:1px solid #000;border-right:1px solid #000;width:10%;text-align:right;padding-top:5px;padding-right:5px;">$' . $this->currency_decimal ( $this->common_model->calculate_currency ( $invoicedata ['amount'] ),2 ) . '</td>
                                                 </tr>';
 		
+		$INVOICE_CHARGE .= '<tr><td></td><td></td>
+			<td style="border-left:1px solid #000;border-bottom:1px solid #000;width:20%;padding:5px;text-align:left;" align="right">GST Amount</td>
+			<td style="border-left:1px solid #000;border-bottom:1px solid #000;border-right:1px solid #000;width:10%;text-align:right;padding-top:5px;padding-right:5px;">$' . $this->currency_decimal ( $this->common_model->calculate_currency ( $invoicedata ['amount'] / 11 ),2 ) . '</td> </tr>';
+		
+		/*
+		 * if ($invoice_tax->num_rows() > 0) {
+		 *
+		 * $total_vat += $invoice_tax['debit'];
 		/*
 		 * if ($invoice_tax->num_rows() > 0) {
 		 *
@@ -2028,7 +2025,7 @@ class Invoices extends MX_Controller {
 		$INVOICE_CHARGE .= '<tr>
                                                 <td></td><td></td>
                                                 <td  style="border-left:1px solid #000;border-bottom:1px solid #000;width:20%;padding:5px;text-align:left;" align="right"><b>Total</b></td>
-                                                <td style="border-left:1px solid #000;border-bottom:1px solid #000;border-right:1px solid #000;width:10%;text-align:right;padding-top:5px;padding-right:5px;">' . $this->currency_decimal ( $this->common_model->calculate_currency ( $invoicedata ['amount'] ) ) . '</td>
+                                                <td style="border-left:1px solid #000;border-bottom:1px solid #000;border-right:1px solid #000;width:10%;text-align:right;padding-top:5px;padding-right:5px;">$' . $this->currency_decimal ( $this->common_model->calculate_currency ( $invoicedata ['amount'] ),2 ) . '</td>
                                                 </tr>
                                                 
                                                ';
