@@ -145,7 +145,7 @@ class Db_model extends CI_Model {
 			$this->db->limit ( $paging_limit, $start_limit );
 		if (! empty ( $groupby ))
 			$this->db->group_by ( $groupby );
-		if (isset ( $_GET ['sortname'] ) && $_GET ['sortname'] != 'undefined') {
+		if (!empty($_GET ['sortname']) && $_GET ['sortname'] != 'undefined') {
 			$this->db->order_by ( $_GET ['sortname'], ($_GET ['sortorder'] == 'undefined') ? 'desc' : $_GET ['sortorder'] );
 		} else {
 			if ($order_by)
@@ -264,7 +264,7 @@ class Db_model extends CI_Model {
 		if ($where != "") {
 			$this->db->where ( $where );
 		}
-		if (isset ( $_GET ['sortname'] ) && $_GET ['sortname'] != 'undefined') {
+		if (!empty($_GET ['sortname']) && $_GET ['sortname'] != 'undefined') {
 			$this->db->order_by ( $_GET ['sortname'], ($_GET ['sortorder'] == 'undefined') ? 'desc' : $_GET ['sortorder'] );
 		} else {
 			if ($order_by)
@@ -313,7 +313,7 @@ class Db_model extends CI_Model {
 		if ($where != "") {
 			$this->db->where ( $where );
 		}
-		if (isset ( $_GET ['sortname'] ) && $_GET ['sortname'] != 'undefined') {
+		if (!empty($_GET ['sortname']) && $_GET ['sortname'] != 'undefined') {
 			$this->db->order_by ( $_GET ['sortname'], ($_GET ['sortorder'] == 'undefined') ? 'desc' : $_GET ['sortorder'] );
 		} else {
 			if ($order_by)
