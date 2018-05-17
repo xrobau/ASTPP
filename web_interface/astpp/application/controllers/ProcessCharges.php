@@ -461,6 +461,8 @@ class ProcessCharges extends MX_Controller {
 					"amount" => "0.00",
 					"balance" => $Balance,
 					"confirm" => 1,
+					"notes" => "",
+					"invoice_note" => "",
 					"type" => "R" 
 			);
 			
