@@ -456,7 +456,7 @@ if ( ! function_exists('form_dropdown_all'))
 		if(is_array($name) && !isset($name["id"])){
 					$form = '<select name="'.$name['name'].'"'." class='$class' data-live-search='true'>\n";
 				}else if(is_array($name) && isset($name["id"])){
-					$form = '<select name="'.$name['name'].'" id="'.$name['id'].'"'."class='$class' data-live-search='true'>\n";
+					$form = '<select name="'.$name['name'].'" id="'.$name['id'].'"'." class='$class' data-live-search='true'>\n";
 				}
 				else{
 					$form = '<select name="'.$name.'"' .$multiple." class='$class' data-live-search='true'>\n";
