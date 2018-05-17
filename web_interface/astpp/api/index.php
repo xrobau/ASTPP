@@ -127,6 +127,13 @@ $api->get("/v1/currentcalls/{acctname}", function($req, $resp) {
 	return $resp->withJson($calls->getCalls($acct));
 });
 
+$api->get("/v1/balance/{acctname}", function($req, $resp) {
+	$acct = $req->getAttribute('acctname');
+	$bal = new ASTPP\Balance;
+	return $resp->withJson($bal->getBalance($acct));
+});
+
+
 
 $api->run();
 
