@@ -49,6 +49,7 @@ class pricing_model extends CI_Model {
 	}
 	function add_price($add_array) {
 		unset ( $add_array ["action"] );
+		unset ( $add_array ["id"] );
 		/*
 		 * ASTPP 3.0 Add Rategroup add creation date.
 		 */
