@@ -695,7 +695,7 @@ class Accounts_model extends CI_Model {
 		if ($flag) {
 			$this->db->limit ( $limit, $start );
 		}
-		if (isset ( $_GET ['sortname'] ) && $_GET ['sortname'] != 'undefined') {
+		if (!empty($_GET ['sortname']) && $_GET ['sortname'] != 'undefined') {
 			$this->db->order_by ( $_GET ['sortname'], ($_GET ['sortorder'] == 'undefined') ? 'desc' : $_GET ['sortorder'] );
 		} else {
 			$this->db->order_by ( 'number', 'desc' );
@@ -729,7 +729,7 @@ class Accounts_model extends CI_Model {
 			if (! $export)
 				$this->db->limit ( $limit, $start );
 		}
-		if (isset ( $_GET ['sortname'] ) && $_GET ['sortname'] != 'undefined') {
+		if (!empty($_GET ['sortname']) && $_GET ['sortname'] != 'undefined') {
 			$this->db->order_by ( $_GET ['sortname'], ($_GET ['sortorder'] == 'undefined') ? 'desc' : $_GET ['sortorder'] );
 		} else {
 			$this->db->order_by ( 'number', 'desc' );
