@@ -1857,7 +1857,7 @@ class Invoices extends MX_Controller {
 			}
 		} else {
 //ASTPP_receipt_description_not_display_issue
-			$query = "select item_type,description,created_date,invoiceid,debit,credit from invoice_details where invoiceid = " . $invoiceid . " And ( item_type='SUBCHRG' OR  item_type='DIDCHRG') Group By item_type";
+			$query = "select item_type,description,created_date,invoiceid,debit,credit from invoice_details where invoiceid = " . $invoiceid . " And ( item_type='SUBCHRG' OR  item_type='DIDCHRG')";
 //END
 			$invoice_total_query = $this->db->query ( $query );
 			if ($invoice_total_query->num_rows () > 0) {
