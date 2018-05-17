@@ -60,6 +60,9 @@ class Charges_model extends CI_Model {
 		
 		unset ( $add_array ['action'] );
 		unset ( $add_array ['id'] );
+		if (empty($add_array['pricelist_id'])) {
+			$add_array['pricelist_id'] = 0;
+		}
 		$this->db->insert ( "charges", $add_array );
 		$insert_id = $this->db->insert_id ();
 		$data = $this->db_model->getSelect ( "*", "accounts", array (
