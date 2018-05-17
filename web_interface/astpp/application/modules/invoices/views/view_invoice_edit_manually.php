@@ -44,7 +44,7 @@ table.datatable th {
 		}
 	}
 	var taxe_rate=0;
-        var taxes_acc='<?= $taxes_to_accounts; ?>';
+	var taxes_acc='<?php /* $taxes_to_accounts; */ ?>';
 	var tax_per = '<?= $total_tax ?>';
 	var total_tax=sum*tax_per/100;
 	$("#total_tax").html(total_tax.toFixed(2));
